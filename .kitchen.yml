@@ -6,12 +6,13 @@ provisioner:
   name: chef_zero
 
 platforms:
-  - name: centos-6.5
+  - name: centos-6.6
+    driver_config:
+      privileged: true
 
 suites:
   - name: elasticsearch
     driver_config:
-      privileged: true
       container_name: es
       publish: 5601:5601
     run_list:

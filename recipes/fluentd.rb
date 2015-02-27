@@ -4,17 +4,50 @@
 #
 # Copyright (c) 2015 The Authors, All Rights Reserved.
 
+include_recipe 'build-essential'
+include_recipe 'rbenv::default'
+include_recipe 'rbenv::ruby_build'
+include_recipe 'supervisor'
+
 package 'libcurl-devel'
 
-include_recipe 'build-essential'
-include_recipe 'td-agent'
-
-td_agent_source 'specinfra_inventory' do
-  type 'specinfra_inventory'
-  params(inventory_keys: ['cpu','domain','filesystem','fqdn','hostname','memory','platform','platform_version'])
+rbenv_ruby "2.1.5" do
+  global true
 end
 
-td_agent_match 'elasticsearch' do
-  type 'elasticsearch'
-  tag 'specinfra.inventory.**'
+%w{
+  fluentd
+  fluent-plugin-forest
+  fluent-plugin-elasticsearch
+  fluent-plugin-specinfra_inventory
+}.each do |name|
+  rbenv_gem name do
+    ruby_version "2.1.5"
+  end
+end
+
+file "/etc/fluentd.conf" do
+  content <<-EOH
+<source>
+  type specinfra_inventory
+  time_span 60
+  inventory_keys ["cpu","domain","filesystem","fqdn","hostname","memory","platform","platform_version"]
+</source>
+<match specinfra.inventory.**>
+  type forest
+  subtype elasticsearch
+  <template>
+    logstash_format true
+    logstash_prefix fluentd-${hostname}
+  </template>
+</match>
+EOH
+  notifies :restart, 'supervisor_service[fluentd]', :delayed
+end
+
+supervisor_service "fluentd" do
+  command "#{node['rbenv']['root_path']}/shims/fluentd -c /etc/fluentd.conf"
+  user node['rbenv']['user']
+  action [:enable, :start]
+  autostart true
 end
