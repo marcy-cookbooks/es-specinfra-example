@@ -7,28 +7,29 @@ provisioner:
 
 platforms:
   - name: centos-6.6
-    driver_config:
-      privileged: true
+  - name: fedora-19
+  - name: ubuntu-14.04
 
 suites:
   - name: elasticsearch
     driver_config:
       container_name: es
       publish: 5601:5601
+      privileged: true
+    excludes:
+      - fedora-19
+      - ubuntu-14.04
     run_list:
       - recipe[es-specinfra-example::elasticsearch]
-  - name: fluent01
+  - name: fluentd01
     driver_config:
       network: container:es
     run_list:
       - recipe[es-specinfra-example::fluentd]
-  - name: fluent02
+  - name: fluentd02
     driver_config:
       network: container:es
-    run_list:
-      - recipe[es-specinfra-example::fluentd]
-  - name: fluent03
-    driver_config:
-      network: container:es
+    excludes:
+      - fedora-19
     run_list:
       - recipe[es-specinfra-example::fluentd]

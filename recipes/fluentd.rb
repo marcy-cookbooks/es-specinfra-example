@@ -9,7 +9,8 @@ include_recipe 'rbenv::default'
 include_recipe 'rbenv::ruby_build'
 include_recipe 'supervisor'
 
-package 'libcurl-devel'
+package 'libcurl-devel' if node['platform_family'] == "rhel"
+package 'libcurl4-openssl-dev' if node['platform_family'] == "debian"
 
 rbenv_ruby "2.1.5" do
   global true
@@ -31,9 +32,8 @@ file "/etc/fluentd.conf" do
 <source>
   type specinfra_inventory
   time_span 60
-  inventory_keys ["cpu","domain","filesystem","fqdn","hostname","memory","platform","platform_version"]
 </source>
-<match specinfra.inventory.**>
+<match specinfra.inventory>
   type forest
   subtype elasticsearch
   <template>
