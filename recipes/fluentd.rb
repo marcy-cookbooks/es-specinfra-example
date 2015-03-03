@@ -45,6 +45,7 @@ file "/etc/fluentd.conf" do
   type forest
   subtype elasticsearch
   <template>
+    host es
     logstash_format true
     logstash_prefix fluentd-${hostname}
   </template>
