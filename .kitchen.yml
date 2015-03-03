@@ -4,7 +4,7 @@ driver:
   instance_host_name: true
 
 provisioner:
-  name: chef_solo
+  name: chef_zero
 
 platforms:
   - name: centos-6.6
@@ -24,11 +24,11 @@ suites:
       - recipe[es-specinfra-example::elasticsearch]
   - name: fluentd01
     driver_config:
-      network: container:es
+      link: es:es
     run_list:
       - recipe[es-specinfra-example::fluentd]
   - name: fluentd02
     driver_config:
-      network: container:es
+      link: es:es
     run_list:
       - recipe[es-specinfra-example::fluentd]
