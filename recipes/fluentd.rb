@@ -36,6 +36,8 @@ file "/etc/fluentd.conf" do
   content <<-EOH
 <source>
   type specinfra_inventory
+  cast_byte      true
+  cast_percent   true
   time_span 60
 </source>
 <match specinfra.inventory>

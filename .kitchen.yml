@@ -29,7 +29,5 @@ suites:
   - name: fluentd02
     driver_config:
       network: container:es
-    excludes:
-      - fedora-20
     run_list:
       - recipe[es-specinfra-example::fluentd]
