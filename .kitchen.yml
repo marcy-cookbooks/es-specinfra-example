@@ -3,7 +3,7 @@ driver:
   name: docker_cli
 
 provisioner:
-  name: chef_zero
+  name: chef_solo
 
 platforms:
   - name: centos-6.6

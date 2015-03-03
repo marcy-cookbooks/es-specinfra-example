@@ -9,8 +9,12 @@ include_recipe 'rbenv::default'
 include_recipe 'rbenv::ruby_build'
 include_recipe 'supervisor'
 
-package 'libcurl-devel' if node['platform_family'] == "rhel"
-package 'libcurl4-openssl-dev' if node['platform_family'] == "debian"
+case node['platform_family']
+when "rhel", "fedora"
+  package 'libcurl-devel'
+when "debian"
+  package 'libcurl4-openssl-dev'
+end
 
 rbenv_ruby "2.1.5" do
   global true
