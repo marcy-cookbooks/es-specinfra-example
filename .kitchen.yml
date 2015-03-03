@@ -1,6 +1,7 @@
 ---
 driver:
   name: docker_cli
+  instance_host_name: true
 
 provisioner:
   name: chef_solo
