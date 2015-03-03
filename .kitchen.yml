@@ -7,7 +7,7 @@ provisioner:
 
 platforms:
   - name: centos-6.6
-  - name: fedora-19
+  - name: fedora-20
   - name: ubuntu-14.04
 
 suites:
@@ -17,7 +17,7 @@ suites:
       publish: 5601:5601
       privileged: true
     excludes:
-      - fedora-19
+      - fedora-20
       - ubuntu-14.04
     run_list:
       - recipe[es-specinfra-example::elasticsearch]
@@ -30,6 +30,6 @@ suites:
     driver_config:
       network: container:es
     excludes:
-      - fedora-19
+      - fedora-20
     run_list:
       - recipe[es-specinfra-example::fluentd]
